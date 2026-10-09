@@ -15,6 +15,10 @@ export default function App() {
 
   return (
     <main className="stage" data-variant={variant}>
+      <header className="page-header">
+        <h1 className="page-title">Today</h1>
+        <img className="avatar" src="/IMG_6723.jpg" alt="Profile" />
+      </header>
       {/* key remounts the card so each variant starts collapsed */}
       <ExpandingCard key={variant} />
       <SegmentControl
@@ -22,6 +26,16 @@ export default function App() {
         value={variant}
         onChange={setVariant}
       />
+      <footer className="page-footer">
+        AI prototyping for Designers by{' '}
+        <a
+          href="https://github.com/ana-rodrigues"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Ana Rodrigues
+        </a>
+      </footer>
     </main>
   )
 }
