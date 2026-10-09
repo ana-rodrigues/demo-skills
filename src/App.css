@@ -1,0 +1,180 @@
+.stage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 32px 16px;
+
+  /* Per-variant motion tokens. "After" is identical for now — the skill
+     will be applied here later. */
+  --card-duration: 700ms;
+  --card-ease: linear(0, 0.0218, 0.0754, 0.1472, 0.2275, 0.3101, 0.3908, 0.467, 0.5372, 0.6007, 0.6575, 0.7075, 0.7513, 0.7894, 0.8222, 0.8503, 0.8743, 0.8947, 0.912, 0.9266, 0.9389, 0.9492, 0.9579, 0.9651, 0.9711, 0.9761, 0.9803, 0.9837, 0.9866, 0.989, 0.9909, 0.9925, 0.9939, 0.995, 0.9959, 0.9966, 0.9972, 0.9977, 0.9982, 0.9985, 1);
+}
+
+/* ---------- Card ---------- */
+
+.card-slot {
+  width: min(320px, 100%);
+  aspect-ratio: 4 / 5;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 24px;
+  /* No white here: it bleeds through antialiased corner pixels. The white
+     panel lives on .card-content only. */
+  background: #0b0f0d;
+  isolation: isolate;
+  color: #1d1d1f;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  outline-offset: 4px;
+}
+
+.card.is-floating {
+  position: fixed;
+  z-index: 20;
+  cursor: default;
+  transform: translate(-50%, -50%);
+}
+
+.card.is-animating {
+  transition:
+    top var(--card-duration) var(--card-ease),
+    left var(--card-duration) var(--card-ease),
+    width var(--card-duration) var(--card-ease),
+    height var(--card-duration) var(--card-ease),
+    border-radius var(--card-duration) var(--card-ease);
+}
+
+.card.is-open { border-radius: 20px; }
+
+.card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 40%;
+  transition: height var(--card-duration) var(--card-ease);
+}
+
+.card.is-open .card-image { height: 420px; }
+
+.card-header {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  right: 20px;
+  transition: transform var(--card-duration) var(--card-ease);
+}
+
+.card.is-open .card-header { transform: translate(6px, 6px); }
+
+.card-eyebrow {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgba(29, 29, 31, 0.6);
+}
+
+.card-title {
+  margin: 8px 0 0;
+  max-width: 17ch;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.card-content {
+  position: absolute;
+  top: 420px;
+  left: 0;
+  width: var(--content-w, 100%);
+  bottom: 0;
+  padding: 28px 36px;
+  overflow: auto;
+  background: #fff;
+  color: #3a3a3c;
+  font-size: 17px;
+  line-height: 1.45;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--card-duration) var(--card-ease),
+    visibility 0s linear var(--card-duration);
+}
+
+.card-content p { margin: 0 0 12px; }
+.card-content p:last-child { margin-bottom: 0; }
+
+.card.is-open .card-content {
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  transition: opacity var(--card-duration) var(--card-ease);
+}
+
+.backdrop.is-open { opacity: 1; }
+
+/* ---------- Segment control ---------- */
+
+.segment {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.segment-track {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+.segment-thumb {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition: transform 300ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.segment-option {
+  position: relative;
+  min-width: 72px;
+  padding: 8px 16px;
+  border: 0;
+  background: none;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+
+.segment-option[aria-checked='true'] { color: #fff; }
