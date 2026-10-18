@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties } from 'react'
 const IMAGE = '/florian-schindler-dNPkHjd3pZk-unsplash.jpg'
 
 const IMAGE_HEIGHT = 420 // keep in sync with .card.is-open .card-image in App.css
-const DURATION = 700 // keep in sync with --card-duration in App.css
+const DURATION = 700 // fallback if --card-duration can't be read
 
 // Boxes are described by their centre so the card grows out from its middle.
 type Box = { top: number; left: number; width: number; height: number }
@@ -18,8 +18,23 @@ export function ExpandingCard() {
   const [animating, setAnimating] = useState(false)
   const timer = useRef<number>(0)
 
+  // Read the active variant's duration so the unmount timer never cuts a
+  // transition short (before = 900ms, after = 600ms).
+  function duration() {
+    const v = getComputedStyle(slot.current!).getPropertyValue('--card-duration')
+    return parseFloat(v) || DURATION
+  }
+
   function expand() {
-    if (from) return
+    if (from) {
+      // Mid-close: reverse. Cancel the pending unmount and retarget; CSS
+      // transitions restart from the live on-screen values, so no jump.
+      if (!open) {
+        window.clearTimeout(timer.current)
+        setOpen(true)
+      }
+      return
+    }
     const r = slot.current!.getBoundingClientRect()
     const width = Math.min(700, window.innerWidth - 32)
     // Size the panel to its copy: measure the text at the expanded width.
@@ -58,7 +73,7 @@ export function ExpandingCard() {
     timer.current = window.setTimeout(() => {
       setFrom(null)
       setAnimating(false)
-    }, DURATION)
+    }, duration() + 50)
   }
 
   useEffect(() => {

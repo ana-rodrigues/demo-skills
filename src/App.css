@@ -223,3 +223,132 @@
 }
 
 .segment-option[aria-checked='true'] { color: #fff; }
+
+/* ---------- "Before" variant: slightly less polished ---------- */
+
+[data-variant='before'] {
+  /* Plain ease-in-out, a touch slower, no spring-like settle */
+  --card-duration: 900ms;
+  --card-ease: ease-in-out;
+}
+
+[data-variant='before'] .card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+[data-variant='before'] .card.is-open { border-radius: 8px; }
+
+[data-variant='before'] .card-title {
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+[data-variant='before'] .backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+/* ---------- "After" variant: Apple-style polish ---------- */
+
+[data-variant='after'] {
+  /* Critically damped spring (no overshoot, a little initial velocity so it
+     responds instantly). Settles inside the 700ms unmount timer in the card. */
+  --card-duration: 600ms;
+  --card-ease: linear(0, 0.0661, 0.1401, 0.2173, 0.2941, 0.3682, 0.4382, 0.5033, 0.5629, 0.617, 0.6657, 0.7091, 0.7476, 0.7816, 0.8115, 0.8377, 0.8605, 0.8803, 0.8975, 0.9123, 0.9251, 0.9361, 0.9456, 0.9537, 0.9607, 0.9666, 0.9717, 0.976, 0.9797, 0.9828, 0.9855, 0.9877, 0.9896, 0.9912, 0.9926, 0.9938, 0.9948, 0.9956, 0.9963, 0.9969, 0.9974, 1);
+}
+
+[data-variant='after'] .card {
+  border-radius: 28px;
+  /* Layered shadow: tight contact + soft ambient, deeper than a small chip */
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.3),
+    0 8px 16px rgba(0, 0, 0, 0.25),
+    0 24px 48px rgba(0, 0, 0, 0.35);
+  outline-offset: 4px;
+}
+
+[data-variant='after'] .card.is-open { border-radius: 24px; }
+
+/* Respond on press, instantly — only while docked in the slot */
+[data-variant='after'] .card:not(.is-floating) {
+  /* `scale`, not `transform`: the floating card uses transform for its
+     centring, and transitioning it would animate that translate away on unmount */
+  transition: scale 120ms ease-out;
+}
+[data-variant='after'] .card:not(.is-floating):active { scale: 0.97; }
+
+[data-variant='after'] .card:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+}
+
+/* Type: tighter tracking and leading as size grows, positive on small text */
+[data-variant='after'] .card-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(29, 29, 31, 0.6);
+}
+
+[data-variant='after'] .card-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.026em;
+}
+
+[data-variant='after'] .card-content {
+  font-size: 17px;
+  line-height: 1.5;
+  letter-spacing: -0.011em;
+  /* Text arrives after the card has started growing, and leaves first */
+  transition:
+    opacity 200ms ease-out,
+    visibility 0s linear 200ms;
+}
+
+[data-variant='after'] .card.is-open .card-content {
+  transition:
+    opacity 300ms ease-out 140ms,
+    visibility 0s linear 0s;
+}
+
+/* Dim to focus, and push the page back with a soft blur */
+[data-variant='after'] .backdrop {
+  background: rgba(0, 0, 0, 0.4);
+  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(0px);
+  transition:
+    opacity var(--card-duration) var(--card-ease),
+    backdrop-filter var(--card-duration) var(--card-ease),
+    -webkit-backdrop-filter var(--card-duration) var(--card-ease);
+}
+
+[data-variant='after'] .backdrop.is-open {
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-variant='after'] {
+    --card-duration: 200ms;
+    --card-ease: ease-out;
+  }
+  /* Cross-fade instead of travelling */
+  [data-variant='after'] .card.is-animating {
+    transition: none;
+  }
+  [data-variant='after'] .card-image,
+  [data-variant='after'] .card-header {
+    transition: none;
+  }
+  [data-variant='after'] .card:not(.is-floating):active { scale: none; }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [data-variant='after'] .backdrop.is-open {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
