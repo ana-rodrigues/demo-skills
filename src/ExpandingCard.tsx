@@ -6,7 +6,7 @@ import {
   type CSSProperties,
   type PointerEvent,
 } from 'react'
-const IMAGE = '/florian-schindler-dNPkHjd3pZk-unsplash.jpg'
+const IMAGE = `${import.meta.env.BASE_URL}florian-schindler-dNPkHjd3pZk-unsplash.jpg`
 
 const IMAGE_HEIGHT = 420 // keep in sync with .card.is-open .card-image in App.css
 const DURATION = 700 // fallback if --card-duration can't be read

@@ -17,7 +17,7 @@ export default function App() {
     <main className="stage" data-variant={variant}>
       <header className="page-header">
         <h1 className="page-title">Today</h1>
-        <img className="avatar" src="/IMG_6723.jpg" alt="Profile" />
+        <img className="avatar" src={`${import.meta.env.BASE_URL}IMG_6723.jpg`} alt="Profile" />
       </header>
       {/* key remounts the card so each variant starts collapsed */}
       <ExpandingCard key={variant} spring={variant === 'after'} />
