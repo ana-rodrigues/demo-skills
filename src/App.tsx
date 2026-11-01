@@ -20,7 +20,7 @@ export default function App() {
         <img className="avatar" src="/IMG_6723.jpg" alt="Profile" />
       </header>
       {/* key remounts the card so each variant starts collapsed */}
-      <ExpandingCard key={variant} />
+      <ExpandingCard key={variant} spring={variant === 'after'} />
       <SegmentControl
         options={OPTIONS}
         value={variant}

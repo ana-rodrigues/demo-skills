@@ -1,0 +1,3 @@
+I want to improve the ExpandingCard component and it's expanding and collapsing interaction to feel closer to Apple's design principles for motion and design.
+Only apply the changes to the card in 'After' unless a structural change is required to both. The goal is to be able to compare the difference between before and after.
+No need to run de dev server, I'll run it and review myself.
